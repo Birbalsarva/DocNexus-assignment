@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
 
@@ -32,15 +31,12 @@ pipeline {
                 script {
                     def remote = [:]
                     remote.name = 'AWS_EC2'
-                    remote.host = 'your-ec2-instance-ip'
-                    remote.user = 'ec2-user' // Replace with your EC2 SSH user
-                    remote.identityFile = '/path/to/your/aws/key.pem' // Replace with your AWS private key path
+                    remote.host = '54.206.111.36' // Replace with your EC2 instance's public IP
+                    remote.user = 'ubuntu' // Set the SSH user for your EC2 instance
+                    remote.identityFile = '/home/ubuntu/ssh.key/Bs.key' // Set the path to your AWS private key
 
-                    // Clone your GitHub repository on the EC2 instance
-                    remote.command = """
-                        cd /path/to/deployment
-                        git clone https://github.com/Birbalsarva/DocNexus-assignment.git
-                    """
+                    // Clone your GitHub repository into the Jenkins workspace
+                    remote.command = "git clone https://github.com/Birbalsarva/DocNexus-assignment.git"
 
                     sshCommand remote: remote
                 }
