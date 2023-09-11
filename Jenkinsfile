@@ -23,7 +23,7 @@ pipeline {
 
                     remote.command = '''
                         # Navigate to the directory containing your website files
-                        cd /path/to/your/website
+                        cd /var/www/html
                         # Copy your website files to the remote server
                         scp -i ${remote.identityFile} -r . ${remote.user}@${remote.host}:/var/www/html/
                         # Restart the web server (if necessary)
