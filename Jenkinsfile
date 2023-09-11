@@ -26,19 +26,20 @@ pipeline {
             }
         }
 
-        stage('Deploy to AWS EC2') {
-            steps {
-                script {
-                    def remote = [:]
-                    remote.name = 'AWS_EC2'
-                    remote.host = '54.206.111.36' // Replace with your EC2 instance's public IP
-                    remote.user = 'ubuntu' // Set the SSH user for your EC2 instance
-                    remote.identityFile = '/home/ubuntu/ssh.key/Bs.key' // Set the path to your AWS private key
+       stage('Deploy to AWS EC2') {
+    steps {
+        script {
+            def remote = [:]
+            remote.name = 'AWS_EC2'
+            remote.host = '54.206.111.36' // Replace with your EC2 instance's public IP
+            remote.user = 'ubuntu' // Set the SSH user for your EC2 instance
+            remote.identityFile = '/home/ubuntu/ssh.key/Bs.key' // Set the path to your AWS private key
 
-                    // Copy your static website files to the EC2 instance
-                    remote.command = "scp -i ${remote.identityFile} -r * ${remote.user}@${remote.host}:/path/to/destination/folder"
-                    
-                    sshCommand remote: remote
+            // Set the SSH command you want to execute on the remote server
+            remote.command = "echo 'Hello from Jenkins'"
+
+            sshCommand remote: remote
+   
                 }
             }
         }
