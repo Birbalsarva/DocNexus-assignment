@@ -27,24 +27,23 @@ pipeline {
             }
         }
 
-        stage('Deploy to AWS EC2') {
-            steps {
-                // Use SSH to connect to your AWS EC2 instance and clone your GitHub repo
-                script {
-                    def remote = [:]
-                    remote.name = 'AWS_EC2'
-                    remote.host = '54.206.111.36' // Replace with your EC2 instance's public IP
-                    remote.user = 'ubuntu' // Set the SSH user for your EC2 instance
-                    remote.identityFile = '/home/ubuntu/ssh.key/Bs.key' // Set the path to your AWS private key
+       stage('Deploy to AWS EC2') {
+    steps {
+        script {
+            def remote = [:]
+            remote.name = 'AWS_EC2'
+            remote.host = '54.206.111.36' // Replace with your EC2 instance's public IP
+            remote.user = 'ubuntu' // Set the SSH user for your EC2 instance
+            remote.identityFile = '/home/ubuntu/ssh.key/Bs.key' // Set the path to your AWS private key
 
-                    // Clone your GitHub repository into the Jenkins workspace
-                    remote.command = "git clone https://github.com/Birbalsarva/DocNexus-assignment.git"
-
-                    sshCommand remote: remote
-                }
-            }
+            // Copy your static website files to the EC2 instance
+            remote.command = "scp -i ${remote.identityFile} -r * ${remote.user}@${remote.host}:/path/to/destination/folder"
+            
+            sshCommand remote: remote
         }
     }
+}
+
 
     post {
         success {
