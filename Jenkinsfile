@@ -21,7 +21,7 @@ pipeline {
                     remote.allowAnyHosts = true
                     remote.identityFile = '/home/ubuntu/ssh_key/Bs.key'  // Path to your private key
 
-                   remote.command = """
+                  remote.command = """
     # Navigate to the directory containing your website files
     cd /var/www/html
     # Copy your website files to the remote server
@@ -29,6 +29,7 @@ pipeline {
     # Restart the web server (if necessary)
     sudo systemctl restart apache2
 """
+
 
                     sshCommand remote: remote, failOnError: true
                 }
