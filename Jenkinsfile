@@ -1,38 +1,35 @@
 pipeline {
     agent any
-    
     stages {
         stage('Checkout') {
             steps {
-                // Checkout the repository
-                script {
-                    git 'https://github.com/Birbalsarva/DocNexus-assignment.git'
-                }
+                checkout scm
             }
         }
-        
-        stage('Build') {
+        stage('Build and Test') {
             steps {
-                // Build your web application (if needed)
-                echo 'Building static HTML file...'
+                // Build and test your static website here.
             }
         }
-        
-        stage('Test') {
-            steps {
-                // Run tests (if needed)
-                sh 'npm install htmlhint'
-                sh 'node_modules/.bin/htmlhint index.html'
-            }
-        }
-        
         stage('Deploy to AWS EC2') {
             steps {
-                // Use SSH to copy the files to your EC2 instance
                 script {
-                    sshagent(['Bs.key']) {
-                        sh 'scp -i /home/ubuntu/ssh_key/Bs.key -o StrictHostKeyChecking=no index.html ubuntu@54.206.111.36:/path/to/destination'
-                    }
+                    def remote = [:]
+                    remote.name = 'YourSSHKeyName'  // Use the SSH credential ID you configured in Jenkins
+                    remote.host = '54.206.111.36'  // Your EC2 instance public IP address
+                    remote.user = 'ubuntu'  // SSH username (for Ubuntu instances)
+                    remote.allowAnyHosts = true
+                    remote.identityFile = '/home/ubuntu/ssh_key/Bs.key'  // Path to your private key
+
+                    remote.command = '''
+                        # Navigate to the directory containing your website files
+                        cd /path/to/your/website
+                        # Copy your website files to the remote server
+                        scp -i ${remote.identityFile} -r . ${remote.user}@${remote.host}:/var/www/html/
+                        # Restart the web server (if necessary)
+                        sudo systemctl restart apache2
+                    '''
+                    sshCommand remote: remote, failOnError: true
                 }
             }
         }
