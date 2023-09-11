@@ -8,7 +8,7 @@ pipeline {
         }
         stage('Build and Test') {
             steps {
-                // Build and test your static website here.
+                  echo 'Building static HTML file...'
             }
         }
         stage('Deploy to AWS EC2') {
