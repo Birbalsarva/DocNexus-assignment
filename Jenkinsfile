@@ -1,9 +1,10 @@
 pipeline {
     agent any
     stages {
+         stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                 git url: "https://github.com/Birbalsarva/DocNexus-assignment.git", branch: "main"
             }
         }
         stage('Build and Test') {
