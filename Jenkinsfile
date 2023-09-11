@@ -8,7 +8,8 @@ pipeline {
         }
         stage('Build and Test') {
             steps {
-                // Copy your files to the destination directory
+                // Add your build and test steps here
+                // For example, if you are building a static website, you might just copy the files.
                 sh "cp -r * /var/www/html/"
             }
         }
