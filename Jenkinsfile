@@ -10,11 +10,11 @@ pipeline {
         }
 
         stage('Build') {
-            steps {
-                // No build step needed for a static HTML file
-            }
-        }
-
+    steps {
+        // No build step needed for a static HTML file, so we'll just echo a message
+        echo 'Building static HTML file...'
+    }
+}
         stage('Test') {
             steps {
                 // Install HTMLHint (you may need to adjust this based on your environment)
