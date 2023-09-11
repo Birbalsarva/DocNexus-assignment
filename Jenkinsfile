@@ -10,8 +10,6 @@ pipeline {
         stage('Build and Test') {
             steps {
                 // Add your build and test steps here
-                // For example, if you are building a static website, you might just copy the files.
-                sh "cp -r * /var/www/html/"
             }
         }
         stage('Deploy to AWS EC2') {
@@ -25,11 +23,17 @@ pipeline {
                     remote.identityFile = '/home/ubuntu/ssh_key/Bs.key'  // Path to your private key
 
                     remote.command = """
+                        # Ensure Apache is running (if not already running)
+                        sudo systemctl start apache2
+
                         # Navigate to the directory containing your website files
                         cd /var/www/html
 
                         # Copy your website files to the remote server
                         scp -i ${remote.identityFile} -r ${WORKSPACE}/* ${remote.user}@${remote.host}:/var/www/html/
+
+                        # Restart the web server (if necessary)
+                        sudo systemctl restart apache2
                     """
                     sshCommand remote: remote, failOnError: true
                 }
