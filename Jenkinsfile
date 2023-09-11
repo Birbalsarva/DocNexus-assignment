@@ -10,18 +10,18 @@ pipeline {
         }
 
         stage('Build') {
-    steps {
-        // No build step needed for a static HTML file, so we'll just echo a message
-        echo 'Building static HTML file...'
-    }
-}
+            steps {
+                // No build step needed for a static HTML file
+            }
+        }
+
         stage('Test') {
             steps {
-                // Install HTMLHint (you may need to adjust this based on your environment)
-                sh 'npm install -g htmlhint'
+                // Install HTMLHint locally in the workspace
+                sh 'npm install htmlhint'
                 
                 // Run HTMLHint to validate the HTML file
-                sh 'htmlhint index.html'
+                sh 'node_modules/.bin/htmlhint index.html'
             }
         }
 
