@@ -9,11 +9,13 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            steps {
-                // No build step needed for a static HTML file
-            }
-        }
+       stage('Build') {
+    steps {
+        // No build step needed for a static HTML file, so we'll just echo a message
+        echo 'Building static HTML file...'
+    }
+}
+
 
         stage('Test') {
             steps {
