@@ -8,7 +8,8 @@ pipeline {
         }
         stage('Build and Test') {
             steps {
-                // Add your build and test steps here
+                // Build and test your static website here.
+                // You can add relevant build and test steps here.
             }
         }
         stage('Deploy to AWS EC2') {
@@ -26,7 +27,7 @@ pipeline {
                         cd /var/www/html
 
                         # Copy your website files to the remote server
-                        scp -i ${remote.identityFile} -r ${WORKSPACE}/* ${remote.user}@${remote.host}:/var/www/html/
+                        scp -i ${remote.identityFile} -r . ${remote.user}@${remote.host}:/var/www/html/
                     """
                     sshCommand remote: remote, failOnError: true
                 }
