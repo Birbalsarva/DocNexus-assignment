@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
     stages {
@@ -27,7 +28,7 @@ pipeline {
                         cd /var/www/html
 
                         # Copy your website files to the remote server
-                        scp -i ${remote.identityFile} -r * ${remote.user}@${remote.host}:/var/www/html/
+                        cp -r * ${remote.user}@${remote.host}:/var/www/html/
                     """
                     sshCommand remote: remote, failOnError: true
                 }
@@ -35,4 +36,3 @@ pipeline {
         }
     }
 }
-
