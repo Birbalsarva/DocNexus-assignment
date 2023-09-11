@@ -19,7 +19,7 @@ pipeline {
                     def remote = [:]
                     remote.name = 'YourSSHKeyName'  // Use the SSH credential ID you configured in Jenkins
                     remote.host = '54.206.111.36'  // Your EC2 instance public IP address
-                    remote.user = 'ubuntu'  // SSH username (for Ubuntu instances)
+                    remote.user = 'deploy-user'  // Use the deployment user you created
                     remote.allowAnyHosts = true
                     remote.identityFile = '/home/ubuntu/ssh_key/Bs.key'  // Path to your private key
 
@@ -36,3 +36,4 @@ pipeline {
         }
     }
 }
+
