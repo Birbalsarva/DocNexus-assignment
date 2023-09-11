@@ -1,58 +1,38 @@
 pipeline {
     agent any
-
     stages {
         stage('Checkout') {
             steps {
-                // Checkout the code from the Git repository
-                git branch: 'main', url: 'https://github.com/Birbalsarva/DocNexus-assignment.git'
+                checkout scm
             }
         }
-
-        stage('Build') {
+        stage('Build and Test') {
             steps {
-                // No build step needed for a static HTML file, so we'll just echo a message
-                echo 'Building static HTML file...'
+                // Build and test your static website here.
             }
         }
-
-        stage('Test') {
+        stage('Deploy to AWS EC2') {
             steps {
-                // Install HTMLHint locally in the workspace
-                sh 'npm install htmlhint'
-                
-                // Run HTMLHint to validate the HTML file
-                sh 'node_modules/.bin/htmlhint index.html'
-            }
-        }
+                script {
+                    def remote = [:]
+                    remote.name = 'YourSSHKeyName'  // Use the SSH credential ID you configured in Jenkins
+                    remote.host = '54.206.111.36'  // Your EC2 instance public IP address
+                    remote.user = 'ubuntu'  // SSH username (for Ubuntu instances)
+                    remote.allowAnyHosts = true
+                    remote.identityFile = '/home/ubuntu/ssh_key/Bs.key'  // Path to your private key
 
-       stage('Deploy to AWS EC2') {
-    steps {
-        script {
-            def remote = [:]
-            remote.name = 'AWS_EC2'
-            remote.host = '54.206.111.36' // Replace with your EC2 instance's public IP
-            remote.user = 'ubuntu' // Set the SSH user for your EC2 instance
-            remote.identityFile = '/home/ubuntu/ssh.key/Bs.key' // Set the path to your AWS private key
-
-            // Set the SSH command you want to execute on the remote server
-            remote.command = "echo 'Hello from Jenkins'"
-
-            sshCommand remote: remote
-   
+                    remote.command = '''
+                        # Navigate to the directory containing your website files
+                        cd /path/to/your/website
+                        # Copy your website files to the remote server
+                        scp -i ${remote.identityFile} -r . ${remote.user}@${remote.host}:/var/www/html/
+                        # Restart the web server (if necessary)
+                        sudo systemctl restart apache2
+                    '''
+                    sshCommand remote: remote, failOnError: true
                 }
             }
         }
     }
-
-    post {
-        success {
-            // Perform any post-deployment actions or notifications on success
-            echo 'Deployment successful!'
-        }
-        failure {
-            // Handle failure scenarios
-            echo 'Deployment failed!'
-        }
-    }
 }
+
