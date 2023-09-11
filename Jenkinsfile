@@ -8,8 +8,7 @@ pipeline {
         }
         stage('Build and Test') {
             steps {
-                // Build and test your static website here.
-                // You can add relevant build and test steps here.
+                // Add your build and test steps here
             }
         }
         stage('Deploy to AWS EC2') {
